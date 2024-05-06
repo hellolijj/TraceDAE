@@ -46,10 +46,9 @@ def train(args):
 
     if args.model == "adae":
         model = AnomalyDAE(in_dim = attrs.size(1), num_nodes = attrs.size(0), hidden_dim = args.hidden_dim, dropout = args.dropout)
-    elif args.model == "tdae":
+    else args.model == "tdae":
         model = TraceDAE(in_dim=attrs.size(1), num_nodes=attrs.size(0), hidden_dim=args.hidden_dim, dropout=args.dropout)
-    else:
-        model = Dominant(feat_size = attrs.size(1), hidden_size = args.hidden_dim, dropout = args.dropout)
+   
     
     if args.device == 'cuda':
         device = torch.device(args.device)

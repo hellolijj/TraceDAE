@@ -1,6 +1,6 @@
 # TraceDAE
 
-Implementation code of the algorithm described in paper "TraceDAE(name todo)". 
+Implementation code of the algorithm described in paper "TraceDAE: Trace-based Anomaly Detection in MicroService Systems via Dual Autoencoder". 
 
 ## Abstract 
 

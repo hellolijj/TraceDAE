@@ -33,13 +33,6 @@ def loss_func(adj, A_hat, attrs, X_hat, alpha):
 
 def train(args):
     adj, attrs, label, adj_label = load_anomaly_detection_dataset(args.dataset)
-
-    # print(adj) # 二维数组
-    # print(attrs) # 二唯数组
-    # print(label) # 一维数组
-    # print(adj_label) # 而为数组
-
-
     adj = torch.FloatTensor(adj)
     adj_label = torch.FloatTensor(adj_label)
     attrs = torch.FloatTensor(attrs)
@@ -49,7 +42,6 @@ def train(args):
     else args.model == "tdae":
         model = TraceDAE(in_dim=attrs.size(1), num_nodes=attrs.size(0), hidden_dim=args.hidden_dim, dropout=args.dropout)
    
-    
     if args.device == 'cuda':
         device = torch.device(args.device)
         adj = adj.to(device)
@@ -57,13 +49,8 @@ def train(args):
         attrs = attrs.to(device)
         model = model.cuda()
         
-    
-    optimizer = torch.optim.Adam(model.parameters(), lr = args.lr)  # 参数调整
+    optimizer = torch.optim.Adam(model.parameters(), lr = args.lr)  
 
-    
-
-
-    # epoch 表示一次训练
     for epoch in range(args.epoch):
         model.train()
         optimizer.zero_grad()
@@ -71,7 +58,7 @@ def train(args):
         A_hat, X_hat = model(attrs, adj)
         # print(A_hat.shape, X_hat.shape)
         # print(adj_label.shape, attrs.shape)
-        loss, struct_loss, feat_loss = loss_func(adj_label, A_hat, attrs, X_hat, args.alpha) #损失函数
+        loss, struct_loss, feat_loss = loss_func(adj_label, A_hat, attrs, X_hat, args.alpha) 
         l = torch.mean(loss)
         l.backward()
         optimizer.step()        
@@ -82,14 +69,14 @@ def train(args):
             A_hat, X_hat = model(attrs, adj)
             loss, struct_loss, feat_loss = loss_func(adj_label, A_hat, attrs, X_hat, args.alpha)
             score = loss.detach().cpu().numpy()
-            print("Epoch:", '%04d' % (epoch), 'Auc', roc_auc_score(label, score))  # 实际目标值，决策函数得分
+            print("Epoch:", '%04d' % (epoch), 'Auc', roc_auc_score(label, score))  
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', default='BlogCatalog', help='dataset name: Flickr/ACM/BlogCatalog')
     parser.add_argument('--hidden_dim', type=int, default=128, help='dimension of hidden embedding (default: 64)')
-    parser.add_argument('--epoch', type=int, default=100, help='Training epoch')  # 训练的次数
+    parser.add_argument('--epoch', type=int, default=100, help='Training epoch') 
     parser.add_argument('--model', default="tdae", help='model choose')
     parser.add_argument('--lr', type=float, default=1e-3, help='learning rate')
     parser.add_argument('--dropout', type=float, default=0., help='Dropout rate')
